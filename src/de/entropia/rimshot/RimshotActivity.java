@@ -30,6 +30,8 @@ public class RimshotActivity extends Activity {
 	}
 
 	private class DoEffect extends AsyncTask<Void, Void, Void> {
+		private Exception exception;
+
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
@@ -41,13 +43,20 @@ public class RimshotActivity extends Activity {
 
 				ds.send(packet);
 			} catch(IOException e) {
-				Toast t = Toast.makeText(getApplicationContext(),
-						"Error: " + e, Toast.LENGTH_SHORT);
-
-				t.show();
+				exception = e;
 			}
 
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if(exception != null) {
+				Toast t = Toast.makeText(getApplicationContext(),
+						"Error: " + exception, Toast.LENGTH_SHORT);
+
+				t.show();
+			}
 		}
 	}
 }
